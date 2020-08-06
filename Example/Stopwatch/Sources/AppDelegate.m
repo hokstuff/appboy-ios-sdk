@@ -41,7 +41,7 @@ static NSString *const AppboyApiKey = @"appboy-sample-ios";
   } else {
     appboyOptions[ABKEndpointKey] = @"sondheim.appboy.com";
   }
-  
+  NSLog(@"second commit");
   IDFADelegate *idfaDelegate = [[IDFADelegate alloc] init];
   appboyOptions[ABKIDFADelegateKey] = idfaDelegate;
   
