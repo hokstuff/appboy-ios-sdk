@@ -18,6 +18,9 @@ static NSString *const AppboyApiKey = @"appboy-sample-ios";
 
 # pragma mark - UIApplicationDelegate
 
+// First comment
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSLog(@"Application delegate method didFinishLaunchingWithOptions is called with launch options: %@", launchOptions);
   
