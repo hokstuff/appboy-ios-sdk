@@ -1,22 +1,70 @@
-## 3.24.1
+## 3.26.1
 
-**Important** This release has a known issue with the `github "Appboy/Appboy-iOS-SDK"` Cartfile configuration. If using that configuration, please use 3.24.0, which is functionally identical, instead.
+#### Changed
+- Deprecates the compilation macro `ABK_ENABLE_IDFA_COLLECTION` in favor of the `ABKIDFADelegate` implementation.
+  - `ABK_ENABLE_IDFA_COLLECTION` will not function properly in iOS 14. To continue collecting IDFA on iOS 14 devices, please upgrade to Xcode 12 and implement `App Tracking Transparency` and Braze's `ABKIDFADelegate` (see the [iOS 14 upgrade guide](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/ios_14/#idfa-and-app-tracking-transparency) for more information).
+
+#### Added
+- Adds improved support for iOS 14 Approximate Location tracking.
+
+## 3.26.0
+
+##### Breaking
+- Removed readonly property `overrideApplicationStatusBarHiddenState` in `ABKInAppMessageViewController.h`.
+
+##### Changed
+- Added Binary Project Specification file for more efficient Carthage integration of the full SDK. 
+  - Update your Cartfile to use `binary "https://raw.githubusercontent.com/Appboy/appboy-ios-sdk/master/appboy_ios_sdk_full.json"`
+  - Support for this integration method was added starting with version 3.24.0 of the SDK.
+
+##### Fixed
+- Fixes an issue with in-app messages not respecting the application's status bar style when _View controller-based status bar appearance_ (`UIViewControllerBasedStatusBarAppearance`) is set to `YES` in the Info.plist.
+- Fixes an issue which can lead to text being cut off in Content Cards for specific iPhone models.
+- Fixes an issue preventing test Content Cards from displaying under specific conditions.
+
+#### Added
+- Adds support for specifying `PushStoryAppGroup` in the `Appboy` dictionary in your app's `Info.plist`. This [Apple App Group](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_security_application-groups?language=objc) will share the [Braze Push Story](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_story/) information such as Campaign IDs between applications from a single Apple Developer account.
+- Adds `appboyBridge.getUser().addAlias(alias, label)` to the javascript interface for HTML in-app messages.
+- Adds the property `overrideUserInterfaceStyle` to `ABKInAppMessage` that allows forcing Light or Dark mode in the same way as Apple's [`UIViewController.overrideUserInterfaceStyle`](https://developer.apple.com/documentation/uikit/uiviewcontroller/3238087-overrideuserinterfacestyle?language=objc).
+  - You can set this property in the `beforeInAppMessageDisplayed:` method of an [ABKInAppMessageControllerDelegate](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/in-app_messaging/customization/#setting-delegates).
+- Adds the ability to dismiss modal in-app messages when the user clicks outside of the in-app message.
+  - This feature is disabled by default.
+  - You can enable the feature by adding the `Appboy` dictionary to your `Info.plist` file. Inside the `Appboy` dictionary, add the `DismissModalOnOutsideTap` boolean subentry and set the value to `YES`.
+  - You can also enable the feature at runtime by setting `ABKEnableDismissModalOnOutsideTapKey` to `YES` in `appboyOptions`.
+
+## 3.25.0
+
+##### Breaking
+- Removes the `arm64e` architecture when building with Cocoapods.
+- Removes the deprecated property `appWindow` from `ABKInAppMessageWindowController`.
+
+## 3.24.2
+
+##### Fixed
+- Fixes an issue with post-dismissal view hierarchy restoration for in-app messages under specific conditions.
+
+##### Changed
+- Deprecates `ABKInAppMessageWindowController` property `appWindow`.
+
+## 3.24.1
 
 ##### Fixed
 - Fixes an issue introduced in 3.24.0 breaking the SDK compatibility with Cocoapods.
 
 ## 3.24.0
 
-**Important** This release is not compatible with Cocoapods. If you are using Cocoapods, do not upgrade to this version and upgrade to 3.24.1 and above instead.
-
-##### Fixed
-- Fixes an issue where the unread indicator on a Content Card would persist even after being read.
+**Important** This release is not compatible with Cocoapods. Do not upgrade to this version and upgrade to 3.24.1 and above instead.
 
 ##### Breaking
 - Renames `ABKInAppMessageWindow`'s `catchClicksOutsideInAppMessage` to `handleAllTouchEvents`.
 
 ##### Fixed
+- Fixes an issue where the unread indicator on a Content Card would persist even after being read.
 - Fixes an issue preventing long texts from displaying correctly in Full in-app messages.
+- Fixes an issue where appboyBridge would not work in an Ajax callback within HTML In-App Messages.
+
+##### Changed
+- Changes the manual integration steps for versions 3.24.0 and newer. Please follow the updated integration steps [here](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/initial_sdk_setup/manual_integration_options/).
 
 ##### Added
 - Adds support for JavaScript functions `window.alert()`, `window.confirm()` and `window.prompt()` in HTML in-app messages.
@@ -122,7 +170,7 @@
 ```
 [[Appboy sharedInstance] registerPushToken:
                 [NSString stringWithFormat:@"%@", deviceToken]];
-``` 
+```
 with
 ```
 [[Appboy sharedInstance] registerDeviceToken:deviceToken];
@@ -161,7 +209,7 @@ with
 ```
 [[Appboy sharedInstance] registerPushToken:
                 [NSString stringWithFormat:@"%@", deviceToken]];
-``` 
+```
 with
 ```
 [[Appboy sharedInstance] registerDeviceToken:deviceToken];
@@ -196,7 +244,7 @@ with
 ## 3.17.0
 
 ##### Breaking
-- Removes `ABKAppboyEndpointDelegate`. 
+- Removes `ABKAppboyEndpointDelegate`.
   - You can now set the endpoint at runtime by setting the value of `ABKEndpointKey` in `appboyOptions` to your custom endpoint (ex. `sdk.api.braze.eu`) at initialization.
 
 ## 3.16.0
@@ -218,7 +266,7 @@ with
   - The preprocessor macro `ABK_DISABLE_LOCATION_SERVICES` is no longer needed.
   - __Important:__ Configuring geofences to request always location permissions remotely from the Braze dashboard is no longer supported. If you are using Geofences, you will need to ensure that your app requests always location permission from your users manually.
 - `ABKAutomaticRequestProcessingExceptForDataFlush` is deprecated. Users using `ABKAutomaticRequestProcessingExceptForDataFlush` should switch to `ABKManualRequestProcessing`, as the new behavior of `ABKManualRequestProcessing` is identical to the previous behavior of `ABKAutomaticRequestProcessingExceptForDataFlush`
- 
+
 ##### Changed
 - Deprecates the push utility methods: `isUninstallTrackingUserNotification:`, `isUninstallTrackingRemoteNotification:`, `isGeofencesSyncUserNotification:`, `isGeofencesSyncRemoteNotification:`, and `isPushStoryRemoteNotification:` from `ABKPushUtils`. Please use the function `isAppboyInternalRemoteNotification:`.
 - Minor changes to the logic of `ABKManualRequestProcessing`. The original `ABKManualRequestProcessing` had specific exceptions and behaved more like `ABKAutomaticRequestProcessingExceptForDataFlush` in practice. As a result, the two policies have been merged into `ABKManualRequestProcessing`. Note that the new definition of `ABKManualRequestProcessing` is that periodic automatic data flushes are disabled. Other requests important to basic Braze functionality will still occur.
@@ -271,7 +319,7 @@ with
 
 ##### Breaking
 - Drops support for iOS 8.
-- Adds support for the arm64e architecture when building with Cocoapods. Requires Xcode 10.1.
+- Adds support for the `arm64e` architecture when building with Cocoapods. Requires Xcode 10.1.
 
 ##### Fixed
 - Fixes bitcode support for the Push Story framework when using Xcode 10.
@@ -424,7 +472,7 @@ with
   ```
   - See our [News Feed Sample app](https://github.com/Appboy/appboy-ios-sdk/tree/master/Samples/NewsFeed/BrazeNewsFeedSample) for sample implementations and customizations.
 - Removes NUI support for Feedback, In-App Messages, and the News Feed.
-  - All customization can now be done by using categories or by extending our open sourced view controllers.  
+  - All customization can now be done by using categories or by extending our open sourced view controllers.
 - Removes deprecated `ABKPushURIDelegate` from the SDK. Use `ABKURLDelegate` instead.
 
 
@@ -521,7 +569,7 @@ with
 - Adds an Objective-C sample app for the Core subspec of the SDK. See `Samples/Core/ObjCSample`.
 
 ##### Fixed
- - Fixes a bug introduced in version 2.30 where crashes could occur if the SDK was directed to handle a custom scheme deep link inside a WebView.   
+ - Fixes a bug introduced in version 2.30 where crashes could occur if the SDK was directed to handle a custom scheme deep link inside a WebView.
    - Addresses https://github.com/Appboy/appboy-ios-sdk/issues/122.
  - Fixes a bug introduced in version 3.0 where new custom attributes were not being flushed if custom attributes had been previously flushed in the same foregrounded session.
  - Fixes a bug introduced in version 3.0 where previously flushed custom attributes were being re-sent.
@@ -699,8 +747,8 @@ with
 ##### Changed
  - Updates push registration to flush the token to the server immediately.
  - Improves the accessibility of in-app messages and news feed cards.
-   - When in voiceOver mode, the SDK auto-focuses on in-app messages when they appear and resets focus on dismissal.  
-   - VoiceOver no longer reads Braze internal labels.  
+   - When in voiceOver mode, the SDK auto-focuses on in-app messages when they appear and resets focus on dismissal.
+   - VoiceOver no longer reads Braze internal labels.
    - News feed cards are enhanced to be more accessible.
 
 ## 2.24.4
@@ -862,7 +910,7 @@ occurred.
  - Adds support for action-based, locally triggered in-app messages. In-app messages are now sent to the device at session start with associated trigger events. The SDK will display in-app messages in near real-time when the trigger event associated with a message occurs. Trigger events can be app opens, push opens, purchases, and custom events.
 
 ##### Changed
- - Deprecates the old system of requesting in-app message display, now collectively known as 'original' in-app messaging, where messages were limited to displaying at app start.  
+ - Deprecates the old system of requesting in-app message display, now collectively known as 'original' in-app messaging, where messages were limited to displaying at app start.
 
 ## 2.18.4
 
