@@ -18,6 +18,9 @@ static NSString *const AppboyApiKey = @"appboy-sample-ios";
 
 # pragma mark - UIApplicationDelegate
 
+// First comment
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSLog(@"Application delegate method didFinishLaunchingWithOptions is called with launch options: %@", launchOptions);
   
@@ -38,7 +41,7 @@ static NSString *const AppboyApiKey = @"appboy-sample-ios";
   } else {
     appboyOptions[ABKEndpointKey] = @"sondheim.appboy.com";
   }
-  
+  NSLog(@"second commit");
   IDFADelegate *idfaDelegate = [[IDFADelegate alloc] init];
   appboyOptions[ABKIDFADelegateKey] = idfaDelegate;
   
@@ -93,6 +96,12 @@ static NSString *const AppboyApiKey = @"appboy-sample-ios";
   self.showSilentPushAlerts = NO;
   
   NSLog(@"Appboy device identifier is %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
 
   return YES;
 }
