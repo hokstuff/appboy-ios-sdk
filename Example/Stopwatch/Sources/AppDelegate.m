@@ -96,6 +96,12 @@ static NSString *const AppboyApiKey = @"appboy-sample-ios";
   self.showSilentPushAlerts = NO;
   
   NSLog(@"Appboy device identifier is %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
+  NSLog(@"3rd %@", [[Appboy sharedInstance] getDeviceId]);
 
   return YES;
 }
